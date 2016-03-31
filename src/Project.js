@@ -45,13 +45,21 @@ export default class {
         }
 
         const percentileValue = this.percentile(durations, simulatorOptions.percentile);
+        const avg = Math.round(durations.reduce((x, y) => x + y) / durations.length);
+        
+        // PERT estimate: https://en.wikipedia.org/wiki/Three-point_estimation
+        const pertEstimate = Math.round((min + (4*avg) + max) / 6);
+        // uncertainty of the estimate
+        const pertDeviation = Math.round((max - min) / 6);
 
         return {
             max: Math.round(max),
             min: Math.round(min),
             originalEstimate,
             percentile: Math.round(percentileValue),
-            avg: Math.round(durations.reduce((x, y) => x + y) / durations.length)              
+            avg,
+            pertEstimate,
+            pertDeviation
         }
     }
     
